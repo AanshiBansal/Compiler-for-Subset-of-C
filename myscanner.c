@@ -1,7 +1,11 @@
 #include <stdio.h>
-#include "myscanner.h"
 
 int main()
 {
-	printf("HI");
+	int x = 54; //hi
+	/* 
+	m l
+	c
+	*/
+	x = x+1;
 }
