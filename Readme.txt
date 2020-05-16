@@ -1,7 +1,3 @@
-Syntax Analysis Phase
-
-Output: Syntax errors with line numbers
-
 Steps to Compile & Run
 1) lex lexer.l
 2) yacc parser.y
