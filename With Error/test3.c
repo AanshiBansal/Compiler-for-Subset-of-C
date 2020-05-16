@@ -8,7 +8,7 @@ int main()
 	/* multiline
 	comment*/
 	printf("%d",b);
-        printf("this is for checking git commit");
+        printf("this is for checking errors");
 	while(b<10)
 	{
 		printf("%d", b)

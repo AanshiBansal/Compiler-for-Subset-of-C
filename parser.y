@@ -1,8 +1,19 @@
+%{
+	int yylineno;
+
+%}
+%nonassoc NO_ELSE
+%nonassoc  ELSE 
+%left '<' '>' '=' GE_OP LE_OP EQ_OP NE_OP 
+%left  '+'  '-'
+%left  '*'  '/' '%'
+%left  '|'
+%left  '&'
 %token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME
+%token XOR_ASSIGN OR_ASSIGN 
 
 %token TYPEDEF EXTERN STATIC AUTO REGISTER
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
@@ -10,8 +21,13 @@
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%start translation_unit
+%start begin
 %%
+
+begin
+	: external_declaration
+	| begin external_declaration
+	;
 
 primary_expression
 	: IDENTIFIER
@@ -194,7 +210,6 @@ type_specifier
 	| UNSIGNED
 	| struct_or_union_specifier
 	| enum_specifier
-	| TYPE_NAME
 	;
 
 struct_or_union_specifier
@@ -377,7 +392,7 @@ expression_statement
 	;
 
 selection_statement
-	: IF '(' expression ')' statement
+	: IF '(' expression ')' statement    %prec NO_ELSE
 	| IF '(' expression ')' statement ELSE statement
 	| SWITCH '(' expression ')' statement
 	;
@@ -397,10 +412,7 @@ jump_statement
 	| RETURN expression ';'
 	;
 
-translation_unit
-	: external_declaration
-	| translation_unit external_declaration
-	;
+
 
 external_declaration
 	: function_definition
@@ -416,13 +428,26 @@ function_definition
 
 %%
 #include <stdio.h>
+#include "lex.yy.c"
 
-extern char yytext[];
-extern int column;
-
-yyerror(s)
-char *s;
+int main(int argc, char *argv[])
 {
-	fflush(stdout);
-	printf("\n%*s\n%*s\n", column, "^", column, s);
+	yyin = fopen(argv[1], "r");
+	if(!yyparse())
+		printf("\nParsing complete\n");
+	else
+		printf("\nParsing failed\n");
+
+	fclose(yyin);
+	displayConstTable();
+	displaySymbolTable();
+
+	return 0;
+}
+
+extern char *yytext;
+yyerror(char *s)
+{
+	//printf("\n %d \n %s\n", "^", column, s);
+	printf("\nLine %d : %s\n", yylineno, s);
 }

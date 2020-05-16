@@ -7,6 +7,9 @@ int main()
 	if(a<10)
 	{
 		a = a + 1;
+		if( a == 4) {
+			;
+		}
 	}
 	else
 	{

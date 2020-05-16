@@ -1,5 +1,5 @@
 #include<stdio.h>
-#define x 3
+
 void main()
 {
 	int a=3;
@@ -7,7 +7,7 @@ void main()
 	while(a<20)
 	{
 		a = a + 1;
-		printf(“%d”, a);
+		printf("%d", a);
 	}
 	a++;	
 }
